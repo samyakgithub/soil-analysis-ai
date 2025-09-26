@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soil Analysis and Fertilizer Suggestion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Upload Soil Report and Enter Crop</h2>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required><br><br>
+        <input type="text" name="crop" placeholder="Enter crop grown" required><br><br>
+        <button type="submit">Analyze</button>
+    </form>
+
+    {% if soil %}
+    <h3>Soil Analysis Result:</h3>
+    <ul>
+        <li>pH: {{ soil.pH }}</li>
+        <li>Nitrogen: {{ soil.Nitrogen }}</li>
+        <li>Phosphorus: {{ soil.Phosphorus }}</li>
+        <li>Potassium: {{ soil.Potassium }}</li>
+    </ul>
+
+    <h3>Crop Suitability:</h3>
+    <p>{{ suitability }}</p>
+
+    <h3>Fertilizer Recommendation:</h3>
+    <p>{{ fertilizer }}</p>
+    {% endif %}
+</body>
+</html>
