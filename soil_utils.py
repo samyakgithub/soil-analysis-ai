@@ -66,3 +66,37 @@ def recommend_fertilizer(soil, crop):
         recommendations.append("No additional fertilizer needed, soil nutrient levels are sufficient.")
 
     return " ".join(recommendations)
+
+import os
+import google.generativeai as genai
+
+def gemini_soil_analysis(soil_data, crop):
+    # Use your Gemini API key from the environment
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return "Gemini API key not set."
+
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-2.0-flash") # or whichever model is appropriate
+
+    prompt = (
+        f"Here is a soil test report:\n"
+        f"pH: {soil_data.get('pH')}\n"
+        f"Nitrogen: {soil_data.get('Nitrogen')}\n"
+        f"Phosphorus: {soil_data.get('Phosphorus')}\n"
+        f"Potassium: {soil_data.get('Potassium')}\n"
+        f"Crop: {crop}\n"
+        f"Analyze this for:\n"
+        f"- Soil suitability for the given crop\n"
+        f"- If suitable, confirm and explain why\n"
+        f"- If unsuitable, suggest better crops for this soil\n"
+        f"- Recommend fertilizer types and approximate amounts required\n"
+        f"Provide the response in markdown format."
+        
+    )
+
+    try:
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        return f"Error communicating with Gemini API: {e}"
